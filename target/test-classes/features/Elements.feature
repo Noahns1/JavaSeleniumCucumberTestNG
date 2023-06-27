@@ -22,3 +22,13 @@ Feature: Elements functionality
     And the user selects submit
     Then the user should not see submitted information
     Then window closes
+
+  @positive
+  Scenario: user checks box
+    Given the user is on the demoqa main page
+    When the user clicks on Elements button
+    Then the user is redirected to elements page
+    When the user clicks on Check Box tab
+    And the user checks box
+    And confirmation message appears after box is checked
+    Then window closes

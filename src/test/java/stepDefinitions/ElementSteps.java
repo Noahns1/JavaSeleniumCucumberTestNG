@@ -68,8 +68,8 @@ public class ElementSteps {
         // web elements
         WebElement fullNameText = driver.findElement(By.id("name"));
         WebElement emailText = driver.findElement(By.id("email"));
-        WebElement currentAddressText = driver.findElement(By.xpath("/html/body/div[2]/div/div/div[2]/div[2]/div[2]/form/div[6]/div/p[3]"));
-        WebElement permanentAddressText = driver.findElement(By.xpath("/html/body/div[2]/div/div/div[2]/div[2]/div[2]/form/div[6]/div/p[4]"));
+        WebElement currentAddressText = driver.findElement(By.xpath("//p[@id='currentAddress' and @class='mb-1']"));
+        WebElement permanentAddressText = driver.findElement(By.xpath("//p[@id='permanentAddress' and @class='mb-1']"));
 
         // actual vs expected for name
         String actualTextName = fullNameText.getText();
@@ -101,7 +101,7 @@ public class ElementSteps {
 
     @Then("the user should not see submitted information")
     public void theUserShouldNotSeeSubmittedInformation() {
-        WebElement box = driver.findElement(By.xpath("/html/body/div[2]/div/div/div[2]/div[2]/div[2]/form/div[6]/div"));
+        WebElement box = driver.findElement(By.id("output"));
         String actualBox = box.getText();
         String expectedBox = "";
         Assert.assertEquals(actualBox, expectedBox);
@@ -110,5 +110,45 @@ public class ElementSteps {
     @Then("window closes")
     public void windowCloses() {
         driver.close();
+    }
+
+    @When("the user clicks on Check Box tab")
+    public void theUserClicksOnCheckBoxTab() {
+        WebElement checkBox = driver.findElement(By.id("item-1"));
+        checkBox.click();
+    }
+
+    @And("the user checks box")
+    public void theUserChecksBox() {
+        WebElement homeBox = driver.findElement(By.className("rct-checkbox"));
+        homeBox.click();
+    }
+
+
+    @And("confirmation message appears after box is checked")
+    public void confirmationMessageAppearsAfterBoxIsChecked() {
+        WebElement checkBoxResult = driver.findElement(By.id("result"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "You have selected :\n" +
+                "home\n" +
+                "desktop\n" +
+                "notes\n" +
+                "commands\n" +
+                "documents\n" +
+                "workspace\n" +
+                "react\n" +
+                "angular\n" +
+                "veu\n" +
+                "office\n" +
+                "public\n" +
+                "private\n" +
+                "classified\n" +
+                "general\n" +
+                "downloads\n" +
+                "wordFile\n" +
+                "excelFile";
+        Assert.assertEquals(actualTextName, expectedTextName);
+
     }
 }
