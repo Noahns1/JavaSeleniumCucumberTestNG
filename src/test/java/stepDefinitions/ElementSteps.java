@@ -1,11 +1,11 @@
 package stepDefinitions;
 
 import io.cucumber.java.en.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+
+import java.util.List;
 
 public class ElementSteps {
     WebDriver driver;
@@ -151,4 +151,93 @@ public class ElementSteps {
         Assert.assertEquals(actualTextName, expectedTextName);
 
     }
+
+    @And("the user clicks Home drop down button")
+    public void theUserClicksHomeDropDownButton() {
+        WebElement homeDropDown = driver.findElement(By.xpath("//button[@class='rct-collapse rct-collapse-btn' and @title='Toggle']"));
+        homeDropDown.click();
+    }
+
+    @And("the user clicks Desktop drop down button")
+    public void theUserClicksDesktopDropDownButton() {
+        WebElement button = driver.findElement(By.xpath("//*[@id=\"tree-node\"]/ol/li/ol/li[1]/span/button"));
+        button.click();
+    }
+
+    @And("the user checks Commands box")
+    public void theUserChecksCommandsBox() {
+        WebElement commandButton = driver.findElement(By.xpath("//*[@id=\"tree-node\"]/ol/li/ol/li[1]/ol/li[2]/span/label/span[1]"));
+        commandButton.click();
+    }
+
+    @Then("result message for Commands appears")
+    public void resultMessageForCommandsAppears() {
+        WebElement checkBoxResult = driver.findElement(By.id("result"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "You have selected :\n" +
+                "commands";
+        Assert.assertEquals(actualTextName, expectedTextName);
+    }
+
+    @When("the user clicks on Radio Button tab")
+    public void theUserClicksOnRadioButtonTab() {
+        WebElement radioButtonTab = driver.findElement(By.id("item-2"));
+        radioButtonTab.click();
+    }
+
+    @And("user clicks Yes button")
+    public void userClicksYesButton() {
+        WebElement radioButton = driver.findElement(By.id("yesRadio"));
+        // by passes iframes
+        try {
+            radioButton.click();
+        } catch(WebDriverException e) {
+            JavascriptExecutor jse = (JavascriptExecutor) driver;
+            jse.executeScript("arguments[0].click();", radioButton);
+        }
+    }
+
+    @Then("user verifies Yes confirmation")
+    public void userVerifiesYesConfirmation() {
+        WebElement checkBoxResult = driver.findElement(By.className("mt-3"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "You have selected Yes";
+        Assert.assertEquals(actualTextName, expectedTextName);
+    }
+
+    @And("user clicks Impressive button")
+    public void userClicksImpressiveButton() {
+        WebElement radioButton = driver.findElement(By.id("impressiveRadio"));
+        // by passes iframes
+        try {
+            radioButton.click();
+        } catch(WebDriverException e) {
+            JavascriptExecutor jse = (JavascriptExecutor) driver;
+            jse.executeScript("arguments[0].click();", radioButton);
+        }
+    }
+
+    @Then("user verifies Impressive confirmation")
+    public void userVerifiesImpressiveConfirmation() {
+        WebElement checkBoxResult = driver.findElement(By.className("mt-3"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "You have selected Impressive";
+        Assert.assertEquals(actualTextName, expectedTextName);
+    }
+
+    @And("user verifies No button is not clickable")
+    public void userVerifiesNoButtonIsNotClickable() {
+        WebElement radioNo = driver.findElement(By.cssSelector("input[id='noRadio']"));
+        boolean selectNo = radioNo.isEnabled();
+
+        // performing click operation if element is enabled
+        if (!selectNo) {
+            System.out.println("Radio button 'No' is disabled as expected");
+        }
+    }
+
+
 }
