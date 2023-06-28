@@ -48,3 +48,32 @@ Feature: Elements functionality
     And user verifies No button is not clickable
     Then window closes
 
+  @positive
+  Scenario: User adds, edits, and deletes Registration Form
+    When user clicks on Web Tables tab
+    And user clicks add button
+    When user fills in registration form
+      | firstName | Noah       |
+      | lastName  | S          |
+      | userEmail | NS@mail.com|
+      | age       | 24         |
+      | salary    | 1          |
+      | department| Selenium   |
+    And user clicks submit
+    Then user verifies form is submitted with correct info
+    When user clicks edit
+    And user edits registration form inputs
+      | firstName | Noah        |
+      | lastName  | Schlaupitz  |
+      | userEmail | NNS@mail.com|
+      | age       | 24          |
+      | salary    | 10          |
+      | department| Selenium!   |
+    Then user clicks submit
+    Then user verifies form is submitted with updated info
+    When user clicks Delete button
+    Then user verifies row is now empty
+    Then window closes
+
+
+

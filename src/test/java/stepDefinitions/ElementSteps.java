@@ -1,11 +1,15 @@
 package stepDefinitions;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
 import java.util.List;
+import java.util.Map;
 
 public class ElementSteps {
     WebDriver driver;
@@ -14,6 +18,7 @@ public class ElementSteps {
     public void theUserIsOnTheLoginPage() {
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\Admin\\Downloads\\chromedriver_win32 (2)\\chromedriver.exe");
         driver = new ChromeDriver();
+        driver.manage().window().maximize();
         driver.get("https://demoqa.com/");
         //WebElement searchInput = driver.findElement(By.name("q"));
         //searchInput.sendKeys("https://demoqa.com/");
@@ -239,5 +244,110 @@ public class ElementSteps {
         }
     }
 
+    @When("user clicks on Web Tables tab")
+    public void userClicksOnWebTablesTab() {
+        WebElement radioButtonTab = driver.findElement(By.id("item-3"));
+        radioButtonTab.click();
+    }
 
+    @And("user clicks add button")
+    public void userClicksAddButton() {
+        WebElement addButton = driver.findElement(By.id("addNewRecordButton"));
+        addButton.click();
+    }
+
+    @When("user fills in registration form")
+    public void userFillsInRegistrationForm(DataTable dataTable) throws Throwable {
+        Map<String, String> dataMap = dataTable.asMap(String.class, String.class);
+
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
+        for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+            String field = entry.getKey();
+            String value = entry.getValue();
+
+            wait.until(ExpectedConditions.elementToBeClickable(By.id(field)));
+
+            WebElement inputElement = driver.findElement(By.id(field));
+            //js.executeScript("arguments[0].value='" + value + "';", inputElement);
+
+            inputElement.sendKeys(value);
+        }
+    }
+
+    @And("user clicks submit")
+    public void userClicksSubmit() {
+        WebElement submitButton = driver.findElement(By.id("submit"));
+        submitButton.click();
+    }
+
+    @Then("user verifies form is submitted with correct info")
+    public void userVerifiesFormIsSubmittedWithCorrectInfo() {
+        WebElement checkBoxResult = driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[2]/div[2]/div[2]/div[3]/div[1]/div[2]/div[4]"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "Noah\n" +
+                "S\n" +
+                "24\n" +
+                "NS@mail.com\n" +
+                "1\n" +
+                "Selenium";
+        Assert.assertEquals(actualTextName, expectedTextName);
+    }
+
+    @When("user clicks edit")
+    public void userClicksEdit() {
+        WebElement editButton = driver.findElement(By.id("edit-record-4"));
+        editButton.click();
+    }
+
+    @And("user edits registration form inputs")
+    public void userEditsRegistrationFormInputs(DataTable dataTable) throws Throwable {
+        Map<String, String> dataMap = dataTable.asMap(String.class, String.class);
+
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+
+        for (Map.Entry<String, String> entry : dataMap.entrySet()) {
+            String field = entry.getKey();
+            String value = entry.getValue();
+
+            wait.until(ExpectedConditions.elementToBeClickable(By.id(field)));
+
+            WebElement inputElement = driver.findElement(By.id(field));
+
+            inputElement.clear();
+            inputElement.sendKeys(value);
+        }
+    }
+
+    @Then("user verifies form is submitted with updated info")
+    public void userVerifiesFormIsSubmittedWithUpdatedInfo() {
+        WebElement checkBoxResult = driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[2]/div[2]/div[2]/div[3]/div[1]/div[2]/div[4]"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "Noah\n" +
+                "Schlaupitz\n" +
+                "24\n" +
+                "NNS@mail.com\n" +
+                "10\n" +
+                "Selenium!";
+        Assert.assertEquals(actualTextName, expectedTextName);
+    }
+
+    @When("user clicks Delete button")
+    public void userClicksDeleteButton() {
+        WebElement editButton = driver.findElement(By.id("delete-record-4"));
+        editButton.click();
+    }
+
+    @Then("user verifies row is now empty")
+    public void userVerifiesRowIsNowEmpty() {
+        WebElement checkBoxResult = driver.findElement(By.xpath("//*[@id=\"app\"]/div/div/div[2]/div[2]/div[2]/div[3]/div[1]/div[2]/div[4]"));
+
+        String actualTextName = checkBoxResult.getText();
+        String expectedTextName = "       ";
+        Assert.assertEquals(actualTextName, expectedTextName);
+    }
 }
